@@ -222,15 +222,17 @@ const (
 	// DefaultPercentageOfNodesToScore defines the percentage of nodes of all nodes
 	// that once found feasible, the scheduler stops looking for more nodes.
 	// A value of 0 means adaptive, meaning the scheduler figures out a proper default.
+	// DefaultPercentageOfNodesToScore 定义所有节点的节点百分比，一旦发现可行，调度程序将停止寻找更多节点。值0表示自适应，这意味着调度程序计算出一个适当的默认值。
 	DefaultPercentageOfNodesToScore = 0
 
 	// MaxCustomPriorityScore is the max score UtilizationShapePoint expects.
+	// MaxCustomPriorityScore 是UtilizationShapePoint期望的最高分数。
 	MaxCustomPriorityScore int64 = 10
 
-	// MaxTotalScore is the maximum total score.
+	// MaxTotalScore 是最大总分。
 	MaxTotalScore int64 = math.MaxInt64
 
-	// MaxWeight defines the max weight value allowed for custom PriorityPolicy
+	// MaxWeight 定义自定义优先级策略允许的最大权重值
 	MaxWeight = MaxTotalScore / MaxCustomPriorityScore
 )
 

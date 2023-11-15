@@ -57,13 +57,10 @@ func NewLoggingConfiguration() *LoggingConfiguration {
 	return &c
 }
 
-// ValidateAndApply combines validation and application of the logging configuration.
-// This should be invoked as early as possible because then the rest of the program
-// startup (including validation of other options) will already run with the final
-// logging configuration.
-//
-// The optional FeatureGate controls logging features. If nil, the default for
-// these features is used.
+// ValidateAndApply 方法将验证和应用日志配置结合在一起。应该尽早调用此方法，因为这样程序启动的其余部分（包括其他选项的验证）将使用最终的日志配置运行。
+// 此方法的作用是对日志配置进行验证，确保其符合预期，并将其应用到程序中。在应用配置之前，方法会先对其进行验证，如果发现不合法的配置，将会返回错误信息。
+// 如果验证通过，则会将配置应用到程序中，并且后续的日志记录将使用新的配置。
+// 此方法还有一个可选参数 FeatureGate，用于控制日志记录功能。如果设置为 nil，则使用默认的功能设置。这个参数可以用来启用或禁用某些高级日志功能，例如结构化日志或跟踪日志等。
 func ValidateAndApply(c *LoggingConfiguration, featureGate featuregate.FeatureGate) error {
 	return validateAndApply(c, nil, featureGate, nil)
 }

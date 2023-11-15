@@ -199,6 +199,7 @@ func validateSystemRequirements(mountUtil mount.Interface) (features, error) {
 // TODO(vmarmol): Add limits to the system containers.
 // Takes the absolute name of the specified containers.
 // Empty container name disables use of the specified container.
+// TODO(vmarmol)：为系统容器添加限制。获取指定容器的绝对名称。空的容器名称会禁用指定的容器。
 func NewContainerManager(mountUtil mount.Interface, cadvisorInterface cadvisor.Interface, nodeConfig NodeConfig, failSwapOn bool, recorder record.EventRecorder, kubeClient clientset.Interface) (ContainerManager, error) {
 	subsystems, err := GetCgroupSubsystems()
 	if err != nil {
@@ -206,7 +207,7 @@ func NewContainerManager(mountUtil mount.Interface, cadvisorInterface cadvisor.I
 	}
 
 	if failSwapOn {
-		// Check whether swap is enabled. The Kubelet does not support running with swap enabled.
+		// 检查是否启用了交换空间。Kubelet不支持在启用交换空间的情况下运行。
 		swapFile := "/proc/swaps"
 		swapData, err := os.ReadFile(swapFile)
 		if err != nil {

@@ -53,6 +53,7 @@ type ContainerManager interface {
 
 	// SystemCgroupsLimit returns resources allocated to system cgroups in the machine.
 	// These cgroups include the system and Kubernetes services.
+	// SystemCgroupsLimit返回机器中分配给系统cgroups的资源。这些cgroups包括系统和Kubernetes服务。
 	SystemCgroupsLimit() v1.ResourceList
 
 	// GetNodeConfig returns a NodeConfig that is being used by the container manager.

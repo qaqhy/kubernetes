@@ -49,44 +49,36 @@ import (
 )
 
 const (
-	// Duration the scheduler will wait before expiring an assumed pod.
-	// See issue #106361 for more details about this parameter and its value.
+	// 调度程序将在假定pod到期之前等待的持续时间。有关此参数及其值的更多详细信息，请参阅第106361期。
 	durationToExpireAssumedPod time.Duration = 0
 )
 
-// ErrNoNodesAvailable is used to describe the error that no nodes available to schedule pods.
+// ErrNoNodesAvailable 用于描述没有节点可用于调度pod的错误。
 var ErrNoNodesAvailable = fmt.Errorf("no nodes available to schedule pods")
 
-// Scheduler watches for new unscheduled pods. It attempts to find
-// nodes that they fit on and writes bindings back to the api server.
+// Scheduler 监听新的未调度pods。它试图找到适合它们的节点，并将绑定写回apiserver中。
 type Scheduler struct {
-	// It is expected that changes made via Cache will be observed
-	// by NodeLister and Algorithm.
+	// 预计NodeLister和Algorithm将观察到通过Cache所做的更改。
 	Cache internalcache.Cache
 
 	Extenders []framework.Extender
 
-	// NextPod should be a function that blocks until the next pod
-	// is available. We don't use a channel for this, because scheduling
-	// a pod may take some amount of time and we don't want pods to get
-	// stale while they sit in a channel.
+	// NextPod 应该是一个阻止直到下一个pod可用的功能。我们不使用频道，因为安排一个pod可能需要一些时间，而且我们不希望pod在频道中过时。
 	NextPod func() *framework.QueuedPodInfo
 
-	// FailureHandler is called upon a scheduling failure.
+	// 调度失败时调用FailureHandler。
 	FailureHandler FailureHandlerFn
 
-	// SchedulePod tries to schedule the given pod to one of the nodes in the node list.
-	// Return a struct of ScheduleResult with the name of suggested host on success,
-	// otherwise will return a FitError with reasons.
+	// SchedulePod尝试将给定的pod调度到节点列表中的一个节点。成功时返回一个具有建议主机名称的ScheduleResult结构，否则将返回一个带有原因的FitError。
 	SchedulePod func(ctx context.Context, fwk framework.Framework, state *framework.CycleState, pod *v1.Pod) (ScheduleResult, error)
 
-	// Close this to shut down the scheduler.
+	// 关闭此项可关闭计划程序。
 	StopEverything <-chan struct{}
 
-	// SchedulingQueue holds pods to be scheduled
+	// SchedulelingQueue包含要调度的pod
 	SchedulingQueue internalqueue.SchedulingQueue
 
-	// Profiles are the scheduling profiles.
+	// 配置文件是计划配置文件。
 	Profiles profile.Map
 
 	client clientset.Interface
@@ -97,12 +89,11 @@ type Scheduler struct {
 
 	nextStartNodeIndex int
 
-	// logger *must* be initialized when creating a Scheduler,
-	// otherwise logging functions will access a nil sink and
-	// panic.
+	// logger必须在创建Scheduler时初始化，否则日志记录功能将访问nil sink导致panic。
 	logger klog.Logger
 }
 
+// applyDefaultHandlers 赋值默认调度方法和失败处理方法
 func (sched *Scheduler) applyDefaultHandlers() {
 	sched.SchedulePod = sched.schedulePod
 	sched.FailureHandler = sched.handleSchedulingFailure
@@ -223,7 +214,7 @@ func WithExtenders(e ...schedulerapi.Extender) Option {
 // FrameworkCapturer is used for registering a notify function in building framework.
 type FrameworkCapturer func(schedulerapi.KubeSchedulerProfile)
 
-// WithBuildFrameworkCapturer sets a notify function for getting buildFramework details.
+// WithBuildFrameworkCapturer设置一个用于获取buildFramework详细信息的通知函数。
 func WithBuildFrameworkCapturer(fc FrameworkCapturer) Option {
 	return func(o *schedulerOptions) {
 		o.frameworkCapturer = fc

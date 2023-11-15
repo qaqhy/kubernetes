@@ -30,7 +30,7 @@ var (
 	isHybrid      bool
 )
 
-// IsCgroup2UnifiedMode returns whether we are running in cgroup v2 unified mode.
+// IsCgroup2UnifiedMode 返回我们是否在cgroup v2统一模式下运行。
 func IsCgroup2UnifiedMode() bool {
 	isUnifiedOnce.Do(func() {
 		var st unix.Statfs_t
@@ -49,7 +49,7 @@ func IsCgroup2UnifiedMode() bool {
 	return isUnified
 }
 
-// IsCgroup2HybridMode returns whether we are running in cgroup v2 hybrid mode.
+// IsCgroup2HybridMode 返回我们是否在 cgroup v2 混合模式下运行。
 func IsCgroup2HybridMode() bool {
 	isHybridOnce.Do(func() {
 		var st unix.Statfs_t

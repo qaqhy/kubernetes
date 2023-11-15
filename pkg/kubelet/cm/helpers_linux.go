@@ -204,9 +204,11 @@ func ResourceConfigForPod(pod *v1.Pod, enforceCPULimits bool, cpuPeriod uint64, 
 	return result
 }
 
-// getCgroupSubsystemsV1 returns information about the mounted cgroup v1 subsystems
+// getCgroupSubsystemsV1 返回关于启用的cgroup v1子系统的信息
 func getCgroupSubsystemsV1() (*CgroupSubsystems, error) {
 	// get all cgroup mounts.
+	// GetCgroupMounts返回cgroup子系统的挂载点。all表示是否仅返回第一个实例或所有挂载点。
+	// 这个函数不应该在cgroupv2的代码中使用，因为在这种情况下，所有的控制器都可以在常量unifiedMountpoint下面找到
 	allCgroups, err := libcontainercgroups.GetCgroupMounts(true)
 	if err != nil {
 		return &CgroupSubsystems{}, err
@@ -234,7 +236,7 @@ func getCgroupSubsystemsV1() (*CgroupSubsystems, error) {
 	}, nil
 }
 
-// getCgroupSubsystemsV2 returns information about the enabled cgroup v2 subsystems
+// getCgroupSubsystemsV2 返回关于启用的cgroup v2子系统的信息
 func getCgroupSubsystemsV2() (*CgroupSubsystems, error) {
 	controllers, err := libcontainercgroups.GetAllSubsystems()
 	if err != nil {
@@ -259,7 +261,7 @@ func getCgroupSubsystemsV2() (*CgroupSubsystems, error) {
 	}, nil
 }
 
-// GetCgroupSubsystems returns information about the mounted cgroup subsystems
+// GetCgroupSubsystems 返回关于已挂载的cgroup子系统的信息
 func GetCgroupSubsystems() (*CgroupSubsystems, error) {
 	if libcontainercgroups.IsCgroup2UnifiedMode() {
 		return getCgroupSubsystemsV2()
